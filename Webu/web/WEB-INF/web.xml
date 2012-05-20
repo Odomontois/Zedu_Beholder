@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+           version="2.5">
+
+    <servlet>
+        <display-name>TreeList</display-name>
+        <servlet-name>TreeList</servlet-name>
+        <servlet-class>odo.verte.serv.tree.TreeList</servlet-class>
+    </servlet>
+    <servlet>
+        <display-name>TreeCreate</display-name>
+        <servlet-name>TreeCreate</servlet-name>
+        <servlet-class>odo.verte.serv.tree.TreeCreate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TreeUpdate</servlet-name>
+        <servlet-class>odo.verte.serv.tree.TreeUpdate</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TreeDelete</servlet-name>
+        <servlet-class>odo.verte.serv.tree.TreeDelete</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>TreeList</servlet-name>
+        <url-pattern>/data/tree/list</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TreeCreate</servlet-name>
+        <url-pattern>/data/tree/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TreeUpdate</servlet-name>
+        <url-pattern>/data/tree/update</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TreeDelete</servlet-name>
+        <url-pattern>/data/tree/delete</url-pattern>
+    </servlet-mapping>
+</web-app>
