@@ -2,8 +2,8 @@ package odo.verte.serv.tree
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
 import odo.verte.data.{DB, Tree}
-import collection.JavaConversions._
-import com.google.appengine.api.datastore.KeyFactory
+import odo.verte.data.TreeJSON._
+import odo.verte.utils.JSON
 
 
 /**
@@ -23,35 +23,13 @@ class TreeList extends HttpServlet {
         "select from " + classOf[Tree].getName
       )
 
-      val results = collectionAsScalaIterable(query.getResultList)
+      val trees = DB.loadResult[Tree](query)
 
-      val trees =
-        (for (result <- results) yield (result match {
-          case tree: Tree => tree
-          case _ => throw new DBException
-        }))
-
-      val resultList = for (tree <- trees) yield Map(
-        "key" -> KeyFactory.keyToString(tree.key),
-        "name" -> tree.name,
-        "size" -> tree.size
-      )
-
-      resp.getWriter.write("[" +
-        (for (item <- resultList) yield "{"
-          + (for ((name, value) <- item) yield
-          name +
-            ":" +
-            (value match {
-              case number: Int => number.toString
-              case other => "'" + other.toString + "'"
-            })).mkString(",")
-          + "}"
-          ).mkString(",")
-        + "]")
+      resp.getWriter.write(JSON.dump(trees))
     } finally {
       manager.close()
     }
   }
+
 }
 
