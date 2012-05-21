@@ -1,11 +1,9 @@
 package odo.verte.serv.tree
 
 import javax.servlet.http.{HttpServletResponse, HttpServletRequest, HttpServlet}
-import HttpServletResponse.SC_OK
-import util.parsing.json.JSON
 import odo.verte.data.{DB, Tree}
 import collection.JavaConversions._
-import com.google.appengine.api.datastore.{Key, KeyFactory}
+import com.google.appengine.api.datastore.KeyFactory
 
 
 /**
@@ -57,104 +55,3 @@ class TreeList extends HttpServlet {
   }
 }
 
-class TreeCreate extends HttpServlet {
-  def buildTree(tree: Map[String, _]): Tree = {
-    val size = tree("size").asInstanceOf[Double].toInt
-    val name = tree("name").asInstanceOf[String]
-    new Tree(null, size, name)
-  }
-
-  override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-    var source = scala.io.Source.fromInputStream(req.getInputStream).getLines.mkString("\n")
-    val trees = JSON.parseFull(source) match {
-      case Some(value) => value match {
-        case tree: Map[String, _] => List(buildTree(tree))
-        case list: List[Any] => for (value: Any <- list) yield value match {
-          case tree: Map[String, _] => buildTree(tree)
-          case _ => throw new ParseException
-        }
-        case _ => throw new ParseException
-      }
-      case None => Nil
-    }
-    val manager = DB.manager
-    try {
-      manager.getTransaction.begin()
-      for (tree <- trees) manager.persist(tree)
-      manager.getTransaction.commit()
-    } finally {
-      manager.close()
-    }
-    resp.setStatus(SC_OK)
-  }
-}
-
-class TreeUpdate extends HttpServlet {
-  def buildTree(tree: Map[String, _]): Tree = {
-    val size = tree("size").asInstanceOf[Double].toInt
-    val name = tree("name").asInstanceOf[String]
-    val key = KeyFactory.stringToKey(tree("key").asInstanceOf[String])
-    new Tree(key, size, name)
-  }
-
-  override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-    var source = scala.io.Source.fromInputStream(req.getInputStream).getLines.mkString("\n")
-    val trees = JSON.parseFull(source) match {
-      case Some(value) => value match {
-        case tree: Map[String, _] => List(buildTree(tree))
-        case list: List[Any] => for (value: Any <- list) yield value match {
-          case tree: Map[String, _] => buildTree(tree)
-          case _ => throw new ParseException
-        }
-        case _ => throw new ParseException
-      }
-      case None => Nil
-    }
-    val manager = DB.manager
-    try {
-      manager.getTransaction.begin()
-      for (tree <- trees) manager.persist(tree)
-      manager.getTransaction.commit()
-    } finally {
-      manager.close()
-    }
-    resp.setStatus(SC_OK)
-  }
-}
-
-class TreeDelete extends HttpServlet {
-  def buildTree(tree: Map[String, _]): Tree = {
-    val size = tree("size").asInstanceOf[Double].toInt
-    val name = tree("name").asInstanceOf[String]
-    val key = KeyFactory.stringToKey(tree("key").asInstanceOf[String])
-    new Tree(key, size, name)
-  }
-
-  override def doPost(req: HttpServletRequest, resp: HttpServletResponse) {
-    var source = scala.io.Source.fromInputStream(req.getInputStream).getLines.mkString("\n")
-    val trees = JSON.parseFull(source) match {
-      case Some(value) => value match {
-        case tree: Map[String, _] => List(buildTree(tree))
-        case list: List[Any] => for (value: Any <- list) yield value match {
-          case tree: Map[String, _] => buildTree(tree)
-          case _ => throw new ParseException
-        }
-        case _ => throw new ParseException
-      }
-      case None => Nil
-    }
-    val manager = DB.manager
-    try {
-      manager.getTransaction.begin()
-      for (tree <- trees) manager.remove(tree)
-    } finally {
-      manager.getTransaction.commit()
-      manager.close()
-    }
-    resp.setStatus(SC_OK)
-  }
-}
-
-private[tree] class ParseException extends Exception
-
-private[tree] class DBException extends Exception
