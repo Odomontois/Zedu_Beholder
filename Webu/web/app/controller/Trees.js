@@ -26,14 +26,20 @@ Ext.define('AM.controller.Trees', {
                 'treelist':{
                     itemdblclick:this.editTree
                 },
-                'treeedit button[action=save]':{
+                'treeedit #saveButton':{
                     click:this.updateTree
                 },
-                'treeedit button[action=delete]':{
+                'treeedit #deleteButton':{
                     click:this.deleteTree
+                },
+                'treeedit #addButton':{
+                    click:this.addTree
                 },
                 'treelist #save':{
                     click:this.saveAll
+                },
+                'treeedit #cancelButton':{
+                    click:this.cancelEdit
                 },
                 'treelist #addNew':{
                     click:this.addNew
@@ -50,17 +56,18 @@ Ext.define('AM.controller.Trees', {
             var win = button.up('window'),
                 form = win.down('form'),
                 record = form.getRecord(),
-                values = form.getValues()
+                values = form.getValues();
 
             record.set(values);
             win.close();
         },
         addNew:function (tool) {
-            var model = Ext.create('AM.model.Tree', {name:"", size:0});
-            model = this.getTreesStore().add(model)[0];
+            var record = Ext.create('AM.model.Tree', {name:"", size:0});
             var view = Ext.widget('treeedit');
-
-            view.down('form').loadRecord(model);
+            view.down("#addButton").setVisible(true);
+            view.down("#saveButton").setVisible(false);
+            view.down("#deleteButton").setVisible(false);
+            view.down('form').loadRecord(record);
         },
         saveAll:function (tool) {
             this.getTreesStore().sync();
@@ -71,6 +78,19 @@ Ext.define('AM.controller.Trees', {
                 record = form.getRecord();
 
             this.getTreesStore().remove(record);
+            win.close();
+        },
+        addTree:function (button) {
+            var win = button.up('window'),
+                form = win.down('form'),
+                record = form.getRecord(),
+                values = form.getValues();
+            record.set(values);
+            this.getTreesStore().add(record);
+            win.close();
+        },
+        cancelEdit:function (button) {
+            var win = button.up('window');
             win.close();
         }
     }

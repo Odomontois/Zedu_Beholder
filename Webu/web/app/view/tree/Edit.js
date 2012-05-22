@@ -13,43 +13,48 @@ Ext.define('AM.view.tree.Edit', {
     layout:'fit',
     autoShow:true,
 
-    initComponent:function () {
-        this.items = [
-            {
-                xtype:'form',
-                items:[
-                    {
-                        xtype:'textfield',
-                        name:'name',
-                        fieldLabel:'Name'
-                    },
-                    {
-                        xtype:'numberfield',
-                        name:'size',
-                        fieldLabel:'Size',
-                        allowDecimals:false,
-                        maxValue:99,
-                        minValue:0
-                    }
-                ]
-            }
-        ];
-        this.buttons = [
-            {
-                text:'Save',
-                action:'save'
-            },
-            {
-                text:'Delete',
-                action:'delete'
-            },
-            {
-                text:'Cancel',
-                scope:this,
-                handler:this.close
-            }
-        ];
-
-        this.callParent(arguments);
-    }
-});
+    items:[
+        {
+            xtype:'form',
+            items:[
+                {
+                    xtype:'textfield',
+                    name:'name',
+                    fieldLabel:'Name'
+                },
+                {
+                    xtype:'numberfield',
+                    name:'size',
+                    fieldLabel:'Size',
+                    allowDecimals:false,
+                    maxValue:99,
+                    minValue:0
+                }
+            ]
+        }
+    ],
+    buttons:[
+        {
+            text:"Add",
+            action:"add",
+            hidden:true,
+            itemId:"addButton"
+        },
+        {
+            text:'Save',
+            action:'save',
+            itemId:"saveButton"
+        },
+        {
+            text:'Delete',
+            action:'delete',
+            itemId:'deleteButton'
+        },
+        {
+            text:'Cancel',
+            action:'cancel',
+            itemId:'cancelButton'
+        }
+    ]
+})
+;

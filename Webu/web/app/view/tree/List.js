@@ -11,6 +11,18 @@ Ext.define('AM.view.tree.List', {
     store:'Trees',
 
     title:'All Tree',
+    tbar:[
+        {
+            xtype:'button',
+            text:"Save All",
+            itemId:"save"
+        },
+        {
+            xtype:'button',
+            text:'Add New',
+            itemId:"addNew"
+        }
+    ],
     tools:[
         {
             itemId:"save",
